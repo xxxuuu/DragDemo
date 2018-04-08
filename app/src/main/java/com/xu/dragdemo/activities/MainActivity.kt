@@ -20,7 +20,7 @@ import java.io.Serializable
 
 class MainActivity : AppCompatActivity(), View.OnDragListener {
 
-    //存放View
+    //  存放View
     var viewList: MutableList<View> = mutableListOf()
 
     companion object {
@@ -33,18 +33,19 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //添加View
+        //  添加View
         for(i in 1..12) {
             val view = Button(App.getAppContext())
             view.text = "$i"
             view.textSize = 22.0f
             view.gravity = Gravity.CENTER
-            //在数组中的索引
+            //  存储信息
             view.tag = ButtonInfo(view.text.toString(), i-1)
             view.setOnClickListener {
                 Toast.makeText(this, "index ${(view.tag as ButtonInfo).index}", Toast.LENGTH_SHORT).show()
             }
             view.setOnLongClickListener {
+                //  开始拖拽
                 startDrag(view)
                 true
             }
@@ -74,13 +75,14 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
      * 拖动Button
      */
     private fun startDrag(view: Button) {
-        //先隐藏View
+        //  拖动时先隐藏View
         view.visibility = View.GONE
 
+        //  获取View中的数据
         val tag = view.tag as ButtonInfo
 
         val intent = Intent()
-        //  用intent来传递数据
+        //  用Intent来传递数据
         intent.putExtra("data", tag)
 
         val dragData: ClipData = ClipData.newIntent("value", intent)
@@ -130,7 +132,7 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
      * 计算并修正位置
      */
     fun correctLocation(event: DragEvent?) {
-        //取出数据
+        //  取出数据
         val btnInfo = event!!.clipData.getItemAt(0).intent.getSerializableExtra("data") as ButtonInfo
         val x: Float = event!!.x
         val y: Float = event!!.y
@@ -138,11 +140,11 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
         val width: Int = gridlayout.width / 3
         val height: Int = gridlayout.height / 4
 
-        //在第几行第几列
+        //  在第几行第几列
         var h: Int = 0
         var l: Int = 0
 
-        //计算在哪个方格
+        //  计算在哪个方格
         when {
             x < width                           -> l = 1
             x > width && x < (2 * width)        -> l = 2
@@ -156,7 +158,7 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
             y > (3 * height) && y < (4 * height)  -> h = 4
         }
 
-        //在数组中的索引
+        //  在数组中的索引
         val index = (l + (h - 1) * 3) - 1
         Log.d(TAG_CORRECT, "l: $l  h: $h  index: $index")
 
@@ -165,7 +167,7 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
             return
         }
 
-        //只要交换两个View数据即可
+        //  只要交换两个View数据即可
         val temp = viewList[index] as Button
         val tempText = (temp.tag as ButtonInfo).text
 
@@ -180,13 +182,13 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
 
         Log.d(TAG_CORRECT, "${btnInfo.index}, ${btnInfo.text}")
         Log.d(TAG_CORRECT, "${index}, ${tempText}")
-
-        gridlayout.refreshDrawableState()
     }
 
 
     /**
      * 存放Button的数据
+     * @param text Button的文本
+     * @param index 在数组中的索引
      */
     class ButtonInfo(var text: String, var index: Int): Serializable
 }
