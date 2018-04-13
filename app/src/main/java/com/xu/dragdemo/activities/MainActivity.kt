@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
             }
             view.setOnLongClickListener {
                 //  开始拖拽
-                startDrag(view)
+                btnDrag(view)
                 true
             }
 
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), View.OnDragListener {
     /**
      * 拖动Button
      */
-    private fun startDrag(view: Button) {
+    private fun btnDrag(view: Button) {
         //  拖动时先隐藏View
         view.visibility = View.GONE
 
